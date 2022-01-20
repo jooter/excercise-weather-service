@@ -16,7 +16,6 @@ import (
 type weatherCache struct {
 	weather        *core.Weather
 	refreshied     int64
-	sync.RWMutex   // read/write concurrency control for the cache
 	sync.WaitGroup // not allowing more than one refresh happening at same time
 }
 
@@ -35,32 +34,18 @@ func NewAdvancedProvider(providerA core.WeatherProvider, providerB core.WeatherP
 func (p *AdvancedProvider) GetWeather() (*core.Weather, error) {
 	start := time.Now().Unix()
 
-	p.cache.RLock()
+	// it may need to wait, in case the cache is refreshing at this moment
+	p.cache.WaitGroup.Wait()
+
 	lastRefreshed := p.cache.refreshied
 	if p.cache.weather != nil {
 		if start-lastRefreshed <= 3 {
 			// cache is refreshed in no more than 3 seconds
-			p.cache.RUnlock()
 			return p.cache.weather, nil
 		}
 	}
-	p.cache.RUnlock()
 
-	// it may need to wait, in case the cache is refreshing at this moment
-	p.cache.WaitGroup.Wait()
-
-	p.cache.RLock()
-	// after wait, cache may be already refreshed
-	if p.cache.refreshied-lastRefreshed > 0 {
-		// new version of cache is found
-		p.cache.RUnlock()
-		return p.cache.weather, nil
-	}
-	p.cache.RUnlock()
-
-	// cache will be refreshed
-	p.cache.Lock()
-	defer p.cache.Unlock()
+	// cache will be refreshed now
 	p.cache.WaitGroup.Add(1)
 	defer p.cache.WaitGroup.Done()
 

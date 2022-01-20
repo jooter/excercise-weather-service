@@ -1,1 +1,1 @@
-# excercise-weather-service
+# exercise-weather-service
