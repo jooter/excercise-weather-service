@@ -39,7 +39,6 @@ func TestGetWeatherNetworkError(t *testing.T) {
 }
 func TestGetWeatherTokenError(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// dummy response wind speed 1 m/s ( 3.6 km/h)
 		w.WriteHeader(http.StatusForbidden)
 		fmt.Fprintln(w, `{"message": "tokern error"}`)
 	}))
@@ -51,7 +50,6 @@ func TestGetWeatherTokenError(t *testing.T) {
 
 func TestGetWeatherErrorOnJSON(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// dummy response wind speed 1 m/s ( 3.6 km/h)
 		w.WriteHeader(http.StatusForbidden)
 		fmt.Fprintln(w, `not json here`)
 	}))

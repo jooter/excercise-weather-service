@@ -9,13 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetWeatherError01(t *testing.T) {
-	ws := New("")
-	w, err := ws.GetWeather()
-	assert.NotNil(t, err)
-	assert.Empty(t, w)
-}
-
 func TestNew(t *testing.T) {
 	ws := New("")
 	w, err := ws.GetWeather()
