@@ -6,6 +6,7 @@ import "errors"
 type Weather struct {
 	TemperatureDegrees float32 `json:"temperature_degrees"`
 	WindSpeed          float32 `json:"wind_speed"`
+	Error              string  `json:"error,omitempty"`
 }
 
 type WeatherProvider interface {

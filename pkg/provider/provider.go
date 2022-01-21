@@ -14,9 +14,9 @@ import (
 )
 
 type weatherCache struct {
-	weather        *core.Weather
-	refreshied     int64
-	sync.WaitGroup // not allowing more than one refresh happening at same time
+	weather    *core.Weather
+	refreshied int64
+	sync.RWMutex
 }
 
 // Advanced Weather Provider
@@ -27,7 +27,7 @@ type AdvancedProvider struct {
 }
 
 func NewAdvancedProvider(providerA core.WeatherProvider, providerB core.WeatherProvider) *AdvancedProvider {
-	cache := &weatherCache{weather: &core.Weather{}}
+	cache := &weatherCache{}
 	return &AdvancedProvider{providerA: providerA, providerB: providerB, cache: cache}
 }
 
@@ -35,24 +35,30 @@ func (p *AdvancedProvider) GetWeather() (*core.Weather, error) {
 	start := time.Now().Unix()
 
 	// it may need to wait, in case the cache is refreshing at this moment
-	p.cache.WaitGroup.Wait()
+	p.cache.RLock()
 
 	lastRefreshed := p.cache.refreshied
 	if p.cache.weather != nil {
 		if start-lastRefreshed <= 3 {
 			// cache is refreshed in no more than 3 seconds
+			p.cache.RUnlock()
 			return p.cache.weather, nil
 		}
 	}
+	p.cache.RUnlock()
 
 	// cache will be refreshed now
-	p.cache.WaitGroup.Add(1)
-	defer p.cache.WaitGroup.Done()
+
+	p.cache.Lock()
+	defer p.cache.Unlock()
 
 	weather, err := p.providerA.GetWeather()
 	if err != nil {
 		weather, err = p.providerB.GetWeather()
 		if err != nil {
+			if p.cache.weather == nil {
+				return nil, core.ErrorGetWeatherFromExternal
+			}
 			err = nil
 			weather = p.cache.weather // both provider failed, whatever in cache will be returned
 		}

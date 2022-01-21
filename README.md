@@ -6,6 +6,8 @@
 
     I assume supporting multiple cities/locations is out of scope of this exercise. 
 
+    If multi-cities is required, we can implement with redis db or in-memory cache as a map with RWMutex with the whole map and RWMutex in each element of the map.
+
 * The service should return a JSON payload with a unified response containing temperature in degrees Celsius and wind speed.
 
     I find wind speed from these two sites are very different. Please check [issues.md](issues.md) for details.
@@ -18,13 +20,14 @@
 
 * Weather results are fine to be cached for up to 3 seconds on the server in normal behaviour to prevent hitting weather providers.
 
-    For implementing this, I create a instance of cache, and share access to all handler calls, and then the workflow is:
+    For implementing this, http handler is created with a instance of cache, and the workflow is:
 
-    - Check and wait cache refreshing
-    - Check if cache is younger than 3 seconds (inclusive), return cache. Otherwise next step
-    - Lock cache by adding 1 to wait group in cache struct
+    - Get read lock for cache
+    - Check if cache is younger than 3 seconds (inclusive), if yes return cache. Otherwise next step
+    - Release read lock
+    - Get read/write lock
     - Query on external provider and refresh cache
-    - Release lock by marking wait group as done
+    - Release read/write lock
 
 * Cached results should be served if all weather providers are down.
 
@@ -32,6 +35,6 @@
 
 * The proposed solution should allow new developers to make changes to the code safely.
 
-    For achieve this, I have done:
+    For achieve this, I have been trying:
     
     - Follow SOLID principles

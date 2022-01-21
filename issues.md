@@ -1,6 +1,9 @@
 # Issues to be investigate
 
-## Wind speed from two web api are very different
+## Wind speed from two web api are very different. 
+
+From Weather Stack, wind spead is 20 km/h. From Open Weather Map, wind speed is 3.2 km/h. Even wind direction degree are very different. I have verified timestamp, unit and localtion. I could not find anyone else asking this problem from googling. 
+
 ```
 // from weatherstack
 {
