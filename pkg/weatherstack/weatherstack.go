@@ -13,14 +13,14 @@ type Weatherstack struct {
 	URL string
 }
 
-func NewWeatherstack(accessKey string) *Weatherstack {
+func New(accessKey string) *Weatherstack {
 	// skipped data validation
 	return &Weatherstack{URL: "http://api.weatherstack.com/current?query=Melbourne&access_key=" + accessKey}
 }
 
 func (w Weatherstack) GetWeather() (*core.Weather, error) {
 
-	ws, err := w.getWeatherstackResponse()
+	ws, err := w.request()
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -29,7 +29,7 @@ func (w Weatherstack) GetWeather() (*core.Weather, error) {
 	return &core.Weather{TemperatureDegrees: ws.Current.Temperature, WindSpeed: ws.Current.WindSpeed}, nil
 }
 
-func (w Weatherstack) getWeatherstackResponse() (ws *weatherStackResponse, err error) {
+func (w Weatherstack) request() (ws *weatherStackResponse, err error) {
 	log.Println("connect:", w.URL)
 	resp, err := http.Get(w.URL)
 	if err != nil {

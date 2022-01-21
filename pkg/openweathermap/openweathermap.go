@@ -10,10 +10,11 @@ import (
 )
 
 type Openweathermap struct {
-	URL string
+	URL     string
+	timeout int
 }
 
-func NewWeatherstack(accessKey string) *Openweathermap {
+func New(accessKey string) *Openweathermap {
 	// skipped data validation
 
 	// Add units=metric in order to getting temperature in celsius
@@ -22,7 +23,7 @@ func NewWeatherstack(accessKey string) *Openweathermap {
 
 func (w Openweathermap) GetWeather() (*core.Weather, error) {
 
-	ws, err := w.getWeatherstackResponse()
+	ws, err := w.request()
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -31,7 +32,7 @@ func (w Openweathermap) GetWeather() (*core.Weather, error) {
 	return &core.Weather{TemperatureDegrees: ws.Main.Temp, WindSpeed: ws.Wind.Speed * 3.6}, nil
 }
 
-func (w Openweathermap) getWeatherstackResponse() (ws *openweathermapResponse, err error) {
+func (w Openweathermap) request() (ws *openweathermapResponse, err error) {
 	log.Println("connect:", w.URL)
 	resp, err := http.Get(w.URL)
 	if err != nil {
@@ -42,11 +43,13 @@ func (w Openweathermap) getWeatherstackResponse() (ws *openweathermapResponse, e
 	dec := json.NewDecoder(resp.Body)
 	err = dec.Decode(&ws)
 
-	if resp.StatusCode != http.StatusOK || err != nil || ws.Message != "" {
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK || ws.Message != "" {
 		log.Println("status code =", resp.StatusCode)
-		if err != nil {
-			log.Println(err)
-		}
 		if ws.Message != "" {
 			log.Println("external error :", ws.Message)
 		}

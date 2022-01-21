@@ -1,11 +1,14 @@
+# For ignor binaries, which have not extent name
+*    # ignore all
+!*.* # un-ignore all files, which have extent name
+!*/  # un-ignore folders
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-
-weather-server
 
 # Test binary, built with `go test -c`
 *.test
