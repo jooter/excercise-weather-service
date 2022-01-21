@@ -30,6 +30,7 @@ func (w Weatherstack) GetWeather() (*core.Weather, error) {
 }
 
 func (w Weatherstack) getWeatherstackResponse() (ws *weatherStackResponse, err error) {
+	log.Println("connect:", w.URL)
 	resp, err := http.Get(w.URL)
 	if err != nil {
 		log.Println(err)

@@ -16,7 +16,9 @@ type Openweathermap struct {
 
 func NewWeatherstack(accessKey string) *Openweathermap {
 	// skipped data validation
-	return &Openweathermap{URL: "http://api.openweathermap.org/data/2.5/weather?q=melbourne,AU&appid=" + accessKey}
+
+	// Add units=metric in order to getting temperature in celsius
+	return &Openweathermap{URL: "http://api.openweathermap.org/data/2.5/weather?q=melbourne,AU&units=metric&appid=" + accessKey}
 }
 
 func (w Openweathermap) GetWeather() (*core.Weather, error) {
@@ -26,11 +28,12 @@ func (w Openweathermap) GetWeather() (*core.Weather, error) {
 		log.Println(err)
 		return nil, err
 	}
-
-	return &core.Weather{TemperatureDegrees: ws.Main.Temp, WindSpeed: ws.Wind.Speed}, nil
+	// Wind speed unit is m/s from source. It convert to km/h by multiply 3.6 .
+	return &core.Weather{TemperatureDegrees: ws.Main.Temp, WindSpeed: ws.Wind.Speed * 3.6}, nil
 }
 
 func (w Openweathermap) getWeatherstackResponse() (ws *openweathermapResponse, err error) {
+	log.Println("connect:", w.URL)
 	resp, err := http.Get(w.URL)
 	if err != nil {
 		log.Println(err)
