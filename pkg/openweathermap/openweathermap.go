@@ -1,6 +1,5 @@
-package openweathermap
-
 // Implement WeatherProvider for using external weatherstack service
+package openweathermap
 
 import (
 	"encoding/json"

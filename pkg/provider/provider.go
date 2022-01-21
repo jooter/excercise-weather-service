@@ -20,18 +20,18 @@ type weatherCache struct {
 }
 
 // Advanced Weather Provider
-type AdvancedProvider struct {
+type FailsafeProvider struct {
 	providerA core.WeatherProvider
 	providerB core.WeatherProvider
 	cache     *weatherCache
 }
 
-func NewAdvancedProvider(providerA core.WeatherProvider, providerB core.WeatherProvider) *AdvancedProvider {
+func NewFailsafeProvider(providerA core.WeatherProvider, providerB core.WeatherProvider) *FailsafeProvider {
 	cache := &weatherCache{}
-	return &AdvancedProvider{providerA: providerA, providerB: providerB, cache: cache}
+	return &FailsafeProvider{providerA: providerA, providerB: providerB, cache: cache}
 }
 
-func (p *AdvancedProvider) GetWeather() (*core.Weather, error) {
+func (p *FailsafeProvider) GetWeather() (*core.Weather, error) {
 	start := time.Now().Unix()
 
 	// it may need to wait, in case the cache is refreshing at this moment

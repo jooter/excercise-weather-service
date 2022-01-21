@@ -29,7 +29,7 @@ func (p mockProvider) GetWeather() (*core.Weather, error) {
 func TestBasic(t *testing.T) {
 	mock01 := newMockProvider(1, nil, 0)
 	mock02 := newMockProvider(2, nil, 0)
-	adv := NewAdvancedProvider(mock01, mock02)
+	adv := NewFailsafeProvider(mock01, mock02)
 	w, err := adv.GetWeather()
 	assert.NoError(t, err)
 	assert.Equal(t, float32(1), w.WindSpeed)
@@ -38,7 +38,7 @@ func TestBasic(t *testing.T) {
 func TestFailover(t *testing.T) {
 	mock01 := newMockProvider(1.1, errors.New("test error"), 0)
 	mock02 := newMockProvider(2, nil, 0)
-	adv := NewAdvancedProvider(mock01, mock02)
+	adv := NewFailsafeProvider(mock01, mock02)
 	w, err := adv.GetWeather()
 	assert.NoError(t, err)
 	assert.Equal(t, float32(2), w.WindSpeed)
@@ -47,7 +47,7 @@ func TestFailover(t *testing.T) {
 func TestOnlyCacheToUse(t *testing.T) {
 	mock01 := newMockProvider(1.1, errors.New("test error"), 0)
 	mock02 := newMockProvider(2, errors.New("test error 2"), 0)
-	adv := NewAdvancedProvider(mock01, mock02)
+	adv := NewFailsafeProvider(mock01, mock02)
 	adv.cache.weather = &core.Weather{}
 	w, err := adv.GetWeather()
 	assert.NoError(t, err)
@@ -57,14 +57,14 @@ func TestOnlyCacheToUse(t *testing.T) {
 func TestError(t *testing.T) {
 	mock01 := newMockProvider(1.1, errors.New("test error"), 0)
 	mock02 := newMockProvider(2, errors.New("test error 2"), 0)
-	adv := NewAdvancedProvider(mock01, mock02)
+	adv := NewFailsafeProvider(mock01, mock02)
 	_, err := adv.GetWeather()
 	assert.Error(t, err)
 }
 
 func TestSequentialRequest(t *testing.T) {
 	mock01 := newMockProvider(1, nil, 10)
-	adv := NewAdvancedProvider(mock01, mock01)
+	adv := NewFailsafeProvider(mock01, mock01)
 	start := time.Now().Unix()
 	log.Println("start")
 	for i := 0; i < 10; i++ {
@@ -79,7 +79,7 @@ func TestSequentialRequest(t *testing.T) {
 
 func TestParallelRequest(t *testing.T) {
 	mock01 := newMockProvider(1, nil, 10)
-	adv := NewAdvancedProvider(mock01, mock01)
+	adv := NewFailsafeProvider(mock01, mock01)
 	start := time.Now().Unix()
 	log.Println("start")
 	var wg sync.WaitGroup

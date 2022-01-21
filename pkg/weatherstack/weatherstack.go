@@ -15,7 +15,7 @@ type Weatherstack struct {
 
 func NewWeatherstack(accessKey string) *Weatherstack {
 	// skipped data validation
-	return &Weatherstack{URL: "http://api.weatherstack.com/current?access_key=" + accessKey + "&query=Melbourne"}
+	return &Weatherstack{URL: "http://api.weatherstack.com/current?query=Melbourne&access_key=" + accessKey}
 }
 
 func (w Weatherstack) GetWeather() (*core.Weather, error) {
