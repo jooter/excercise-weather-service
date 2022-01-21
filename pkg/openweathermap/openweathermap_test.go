@@ -10,7 +10,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	ws := New("")
+	ws := New("", 15)
 	w, err := ws.GetWeather()
 	assert.NotNil(t, err)
 	assert.Empty(t, w)
@@ -25,14 +25,14 @@ func TestGetWeatherOK(t *testing.T) {
 			}
 		}`)
 	}))
-	client := &Openweathermap{URL: srv.URL}
+	client := &Openweathermap{url: srv.URL}
 	weather, err := client.GetWeather()
 	assert.Nil(t, err)
 	assert.Equal(t, float32(3.6), weather.WindSpeed)
 }
 
 func TestGetWeatherNetworkError(t *testing.T) {
-	client := &Openweathermap{URL: "wrong://"}
+	client := &Openweathermap{url: "wrong://"}
 	weather, err := client.GetWeather()
 	assert.NotNil(t, err)
 	assert.Empty(t, weather)
@@ -42,7 +42,7 @@ func TestGetWeatherTokenError(t *testing.T) {
 		w.WriteHeader(http.StatusForbidden)
 		fmt.Fprintln(w, `{"message": "tokern error"}`)
 	}))
-	client := &Openweathermap{URL: srv.URL}
+	client := &Openweathermap{url: srv.URL}
 	weather, err := client.GetWeather()
 	assert.NotNil(t, err)
 	assert.Empty(t, weather)
@@ -53,7 +53,7 @@ func TestGetWeatherErrorOnJSON(t *testing.T) {
 		w.WriteHeader(http.StatusForbidden)
 		fmt.Fprintln(w, `not json here`)
 	}))
-	client := &Openweathermap{URL: srv.URL}
+	client := &Openweathermap{url: srv.URL}
 	weather, err := client.GetWeather()
 	assert.NotNil(t, err)
 	assert.Empty(t, weather)

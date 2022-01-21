@@ -5,17 +5,20 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/jooter/exercise-weather-service/pkg/core"
 )
 
 type Weatherstack struct {
-	URL string
+	url     string
+	timeout int
 }
 
-func New(accessKey string) *Weatherstack {
+func New(accessKey string, timeout int) *Weatherstack {
 	// skipped data validation
-	return &Weatherstack{URL: "http://api.weatherstack.com/current?query=Melbourne&access_key=" + accessKey}
+	return &Weatherstack{timeout: timeout,
+		url: "http://api.weatherstack.com/current?query=Melbourne&access_key=" + accessKey}
 }
 
 func (w Weatherstack) GetWeather() (*core.Weather, error) {
@@ -30,8 +33,9 @@ func (w Weatherstack) GetWeather() (*core.Weather, error) {
 }
 
 func (w Weatherstack) request() (ws *weatherStackResponse, err error) {
-	log.Println("connect:", w.URL)
-	resp, err := http.Get(w.URL)
+	log.Println("connect:", w.url)
+	client := http.Client{Timeout: time.Duration(w.timeout) * time.Second}
+	resp, err := client.Get(w.url)
 	if err != nil {
 		log.Println(err)
 		return nil, err

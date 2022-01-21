@@ -5,20 +5,22 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/jooter/exercise-weather-service/pkg/core"
 )
 
 type Openweathermap struct {
-	URL     string
+	url     string
 	timeout int
 }
 
-func New(accessKey string) *Openweathermap {
+func New(accessKey string, timeout int) *Openweathermap {
 	// skipped data validation
 
 	// Add units=metric in order to getting temperature in celsius
-	return &Openweathermap{URL: "http://api.openweathermap.org/data/2.5/weather?q=melbourne,AU&units=metric&appid=" + accessKey}
+	return &Openweathermap{timeout: timeout,
+		url: "http://api.openweathermap.org/data/2.5/weather?q=melbourne,AU&units=metric&appid=" + accessKey}
 }
 
 func (w Openweathermap) GetWeather() (*core.Weather, error) {
@@ -33,8 +35,9 @@ func (w Openweathermap) GetWeather() (*core.Weather, error) {
 }
 
 func (w Openweathermap) request() (ws *openweathermapResponse, err error) {
-	log.Println("connect:", w.URL)
-	resp, err := http.Get(w.URL)
+	log.Println("connect:", w.url) // to be removed for provent key leaking
+	client := http.Client{Timeout: time.Duration(w.timeout) * time.Second}
+	resp, err := client.Get(w.url)
 	if err != nil {
 		log.Println(err)
 		return nil, err
