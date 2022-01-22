@@ -17,7 +17,7 @@ type Config struct {
 }
 
 func ParseConfigFile(filename string) *Config {
-	var conf Config
+	conf := Config{Timeout: 15, CacheExpiry: 3} // set default values
 	configFile, err := os.Open(filename)
 	if err != nil {
 		log.Println(err)
