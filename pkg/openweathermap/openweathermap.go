@@ -4,6 +4,7 @@ package openweathermap
 import (
 	"encoding/json"
 	"log"
+	"math"
 	"net/http"
 	"time"
 
@@ -31,7 +32,10 @@ func (w Openweathermap) GetWeather() (*core.Weather, error) {
 		return nil, err
 	}
 	// Wind speed unit is m/s from source. It convert to km/h by multiply 3.6 .
-	return &core.Weather{TemperatureDegrees: ws.Main.Temp, WindSpeed: ws.Wind.Speed * 3.6}, nil
+	// And round to 2 decimal places
+	return &core.Weather{TemperatureDegrees: ws.Main.Temp,
+			WindSpeed: float32(math.Round(float64(ws.Wind.Speed)*3.6*100) / 100)},
+		nil
 }
 
 func (w Openweathermap) request() (ws *openweathermapResponse, err error) {
