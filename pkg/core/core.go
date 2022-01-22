@@ -4,8 +4,8 @@ package core
 import "errors"
 
 type Weather struct {
-	TemperatureDegrees float32 `json:"temperature_degrees"`
-	WindSpeed          float32 `json:"wind_speed"`
+	TemperatureDegrees float32 `json:"temperature_degrees,omitempty"`
+	WindSpeed          float32 `json:"wind_speed,omitempty"`
 	Error              string  `json:"error,omitempty"`
 }
 

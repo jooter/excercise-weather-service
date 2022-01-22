@@ -33,7 +33,7 @@ func (w Weatherstack) GetWeather() (*core.Weather, error) {
 }
 
 func (w Weatherstack) request() (ws *weatherStackResponse, err error) {
-	log.Println("connect:", w.url)
+	log.Println("connect:", w.url) // to be removed for provent key leaking
 	client := http.Client{Timeout: time.Duration(w.timeout) * time.Second}
 	resp, err := client.Get(w.url)
 	if err != nil {
