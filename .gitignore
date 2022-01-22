@@ -1,7 +1,10 @@
 # For ignor binaries, which have not extent name
-*    # ignore all
-!*.* # un-ignore all files, which have extent name
-!*/  # un-ignore folders
+# ignore all
+*    
+# un-ignore all files, which have extent name
+!*.* 
+# un-ignore folders
+!*/  
 
 # Binaries for programs and plugins
 *.exe
