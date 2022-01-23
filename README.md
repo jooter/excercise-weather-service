@@ -7,7 +7,7 @@
 
     If query parameter city is not Melbourne, "unknown city" error will be returned.
 
-    If multi-cities is required, we can implement with redis db or in-memory cache as a map with RWMutex on map keys and RWMutex in each element of the map.
+    If multi-cities is required, we can implement with redis db, or use sync.Map, or use normal map as in-memory cache with RWMutex on map keys and RWMutex in each element of the map.
 
 * **The service should return a JSON payload with a unified response containing temperature in degrees Celsius and wind speed.**
 
