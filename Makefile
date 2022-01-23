@@ -1,3 +1,6 @@
+
+default: utest itest
+
 # unit tests
 utest:
 	go test -count=1 -cover ./...
@@ -7,15 +10,20 @@ build:
 	go build ./cmd/weather-server/. 
 
 # integration test
+# From log message, we should see hitting external provider only twice
 itest: build
+	echo
 	./weather-server & 
-	sleep 1
-	curl http://localhost:8080/v1/weather?city=melbourne
-	curl http://localhost:8080/v1/weather?city=melbourne
-	curl http://localhost:8080/v1/weather?city=melbourne
-	curl http://localhost:8080/v1/weather?city=melbourne
-	curl http://localhost:8080/v1/weather?city=melbourne
-	pkill -c -f ./weather-server
+	echo
+	sleep 1 # wait for server startup
+	curl http://localhost:8080/v1/weather?city=melbourne # hit external
+	curl http://localhost:8080/v1/weather?city=melbourne # not hit external
+	sleep 4 # wait for cache expire
+	curl http://localhost:8080/v1/weather?city=melbourne # hit external
+	curl http://localhost:8080/v1/weather?location=melbourne # error
+	curl http://localhost:8080/v1/weather?city=sydney # error
+	curl http://localhost:8080/v1/notExistAPI # error
+	pkill -c -f ./weather-server # shutdown server
 
 # coverage report
 cover:

@@ -30,7 +30,9 @@ func main() {
 	failsafeProvider := provider.NewFailsafeProvider(providerA, providerB, conf.CacheExpiry)
 
 	// HTTP server
-	http.HandleFunc("/v1/weather", handler.CreateWeatherHandler(failsafeProvider))
+	weatherHandler := handler.CreateWeatherHandler(failsafeProvider)
+	http.Handle("/v1/weather", weatherHandler)
+	http.HandleFunc("/", handler.NotFoundHandler)
 
 	log.Println("Listen at", *serverAddressPtr)
 	log.Fatalln(http.ListenAndServe(*serverAddressPtr, nil))

@@ -12,12 +12,13 @@ import (
 type Config struct {
 	KeyOfWeatherstack   string `json:"key_of_weatherstack"`
 	KeyOfOpenweathermap string `json:"key_of_openweathermap"`
-	Timeout             int    `json:"timeout"`
-	CacheExpiry         int    `json:"cache_expiry"`
+	Timeout             int    `json:"timeout"`      // unit is second
+	CacheExpiry         int    `json:"cache_expiry"` // unit is second
 }
 
 func ParseConfigFile(filename string) *Config {
-	conf := Config{Timeout: 15, CacheExpiry: 3} // set default values
+	// set default values
+	conf := Config{Timeout: 15, CacheExpiry: 3}
 	configFile, err := os.Open(filename)
 	if err != nil {
 		log.Println(err)
