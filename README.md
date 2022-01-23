@@ -72,13 +72,14 @@
 
 ## Build and test in Linux
 
-In command line under the directory of this project
+In command line under the directory of this project, you can use command below for running unit test, build, integration test all together:
 ```
 make
 ```
-or 
+or run each step separately:
 ```
-make utest
-make itest
+make utest # unit test
+make build
+make itest # integration test
 ```
-or check build and test history in github actions tab in this project
+You also can check build and test history in github actions tab in this project
