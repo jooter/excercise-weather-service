@@ -14,7 +14,7 @@ import (
 func CreateWeatherHandler(failsafeProvider *provider.FailsafeProvider) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !r.URL.Query().Has("city") {
-			response(w, nil, http.StatusBadRequest, "query option city is missing")
+			response(w, nil, http.StatusBadRequest, "query parameter city is missing")
 			return
 		}
 		if strings.ToLower(r.URL.Query().Get("city")) != "melbourne" {
@@ -22,9 +22,9 @@ func CreateWeatherHandler(failsafeProvider *provider.FailsafeProvider) http.Hand
 			return
 		}
 		weather, err := failsafeProvider.GetWeather()
-		if err != nil && err != core.ErrorGetWeatherFromExternal {
+		if err != nil {
 			log.Println(err)
-			response(w, nil, http.StatusNoContent, err.Error())
+			response(w, nil, http.StatusFailedDependency, err.Error())
 			return
 		}
 		response(w, weather, http.StatusOK, "")

@@ -27,5 +27,6 @@ itest: build
 
 # coverage report
 cover:
-	go test -v -count=1 -cover -coverprofile=provider.cov ./pkg/provider/.
+	# go test -v -count=1 -cover -coverprofile=provider.cov ./pkg/provider/.
+	go test -v -count=1 -cover -coverprofile=provider.cov ./internal/handler/.
 	go tool cover -html=provider.cov
