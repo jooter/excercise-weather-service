@@ -6,11 +6,21 @@
 
     I assume supporting multiple cities/locations is out of scope of this exercise. 
 
+    If query city is not Melbourne, "unknown city" error will be returned.
+
     If multi-cities is required, we can implement with redis db or in-memory cache as a map with RWMutex on map keys and RWMutex in each element of the map.
 
 * The service should return a JSON payload with a unified response containing temperature in degrees Celsius and wind speed.
 
     I find wind speed from these two sites are very different. Please check [issues.md](issues.md) for details.
+
+    When error, none OK status code will be returned, and playload like below will be returned.
+    ```
+    {
+    	"error": "query parameter city is missing"
+    }
+
+    ```
 
 * If one of the providers goes down, your service can quickly failover to a different provider without affecting your customers.
 
@@ -33,15 +43,20 @@
 
 * Cached results should be served if all weather providers are down.
 
-    Additionally, if no cache has been created yet, and all providers are down, error message will be returned.
+    Additionally, if no cache has been created yet, and all providers are down, an error message will be returned.
+    ```
+    {
+	    "error": "error on getting weather from external"
+    }
+    ```
 
 * The proposed solution should allow new developers to make changes to the code safely.
 
     For achieve this, I have been trying to:
     
-    - Follow SOLID principles
-        - Dependency inversion principle has been used for designing failsafe provider in this solution.
-        - The most of modules are assembled in server main file by dependency injection technique.
+    - Follow all SOLID principles
+        - For example, dependency inversion principle has been used for designing failsafe provider in this solution.
+    - The most of modules are assembled in server main file by dependency injection technique.
     - Follow TDD process and the important modules have reached 90% to 100% coverage
     - Write "Clean Code" 
 
