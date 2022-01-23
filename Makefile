@@ -23,8 +23,7 @@ itest: build
 	curl -s http://localhost:8080/v1/weather?location=melbourne # error
 	curl -s http://localhost:8080/v1/weather?city=sydney # error
 	curl -s http://localhost:8080/v1/notExistAPI # error
-	pkill -c -f ./weather-server # shutdown server
-	echo
+	pkill -c -f ./weather-server # shutdown server || true # pkill failed in github actions
 
 # coverage report
 cover:
