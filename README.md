@@ -53,20 +53,21 @@
 
 * The proposed solution should allow new developers to make changes to the code safely.
 
-    For achieve this, I have been trying to:
+    To achieve this, I have been trying to:
     
-    - Follow all SOLID principles
-        - For example, dependency inversion principle has been used for designing failsafe provider in this solution.
+    - Follow all SOLID principles, for example:
+        - Dependency inversion principle has been used for designing failsafe provider in this solution.
         - The most of modules are assembled in main.go file by dependency injection technique.
     - Follow TDD process and the important modules have reached more than 90% coverage
     - Write "Clean Code" 
+    - Build a simple and easy development process.
 
 * Due to size and purpose of this project, compare with normal project I have skipped or been relexed for below:
-    - My integration tests results are not verified automatically.
-    - Docker container could be used for scaling out or dev/test for micro services.
-    - Web service frameworks could be used for simplifying and standardize micro service implementation.
-    - I also skipped unit tests for some module.
-    - Access keys should not be keeping in source code repository.
+    - For integration tests, my results are not verified automatically. I rely on unit test heavily in the project.
+    - Skipped Docker container, which could be used for scaling out or dev/test for micro services.
+    - Not use any web service frameworks, which could be used for simplifying and standardize micro service implementation.
+    - Skipped unit tests for some module.
+    - I keep access keys in github in example config file, which is bad pratice for security reason.
 
 ## Build and test in Linux
 
