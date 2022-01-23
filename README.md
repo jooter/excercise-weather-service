@@ -62,6 +62,8 @@
     - Write "Clean Code" 
     - Build a simple and easy development process.
 
+## Note
+
 * Due to size and purpose of this project, compare with normal project I have skipped or been relexed for below:
     - For integration tests, my results are not verified automatically. I rely on unit test heavily in the project.
     - Skipped Docker container, which could be used for scaling out or dev/test for micro services.
