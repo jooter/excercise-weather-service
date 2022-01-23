@@ -24,11 +24,12 @@
 
 * If one of the providers goes down, your service can quickly failover to a different provider without affecting your customers.
 
-    For "quickly failover", configurable timeout has been implemented.
+    For "quickly failover", configurable timeout has been implemented. [config.json](config.json) is an example config file.
 
 * Have scalability and reliability in mind when designing the solution.
     - Docker or serverless could be used for scale out (not implement).
     - Query rate limit middle-ware could be implement to improve reliability (not implement).
+    - Many errors and corner cases have investigated and tested.
 
 * Weather results are fine to be cached for up to 3 seconds on the server in normal behaviour to prevent hitting weather providers.
 
@@ -56,11 +57,11 @@
     
     - Follow all SOLID principles
         - For example, dependency inversion principle has been used for designing failsafe provider in this solution.
-    - The most of modules are assembled in server main file by dependency injection technique.
-    - Follow TDD process and the important modules have reached 90% to 100% coverage
+        - The most of modules are assembled in main.go file by dependency injection technique.
+    - Follow TDD process and the important modules have reached more than 90% coverage
     - Write "Clean Code" 
 
-* Due to size and purpose of this project, compare with normal project I have skipped or ignored below:
+* Due to size and purpose of this project, compare with normal project I have skipped or been relexed for below:
     - My integration tests results are not verified automatically.
     - Docker container could be used for scaling out or dev/test for micro services.
     - Web service frameworks could be used for simplifying and standardize micro service implementation.
@@ -69,7 +70,7 @@
 
 ## Build and test in Linux
 
-In command line
+In command line under the directory of this project
 ```
 make
 ```
@@ -78,4 +79,4 @@ or
 make utest
 make itest
 ```
-or check github actions tab in this project
+or check build and test history in github actions tab in this project
