@@ -16,14 +16,15 @@ itest: build
 	./weather-server & 
 	echo
 	sleep 1 # wait for server startup
-	curl http://localhost:8080/v1/weather?city=melbourne # hit external
-	curl http://localhost:8080/v1/weather?city=melbourne # not hit external
+	curl -s http://localhost:8080/v1/weather?city=melbourne # hit external
+	curl -s http://localhost:8080/v1/weather?city=melbourne # not hit external
 	sleep 4 # wait for cache expire
-	curl http://localhost:8080/v1/weather?city=melbourne # hit external
-	curl http://localhost:8080/v1/weather?location=melbourne # error
-	curl http://localhost:8080/v1/weather?city=sydney # error
-	curl http://localhost:8080/v1/notExistAPI # error
+	curl -s http://localhost:8080/v1/weather?city=melbourne # hit external
+	curl -s http://localhost:8080/v1/weather?location=melbourne # error
+	curl -s http://localhost:8080/v1/weather?city=sydney # error
+	curl -s http://localhost:8080/v1/notExistAPI # error
 	pkill -c -f ./weather-server # shutdown server
+	echo
 
 # coverage report
 cover:
