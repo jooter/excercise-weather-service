@@ -42,12 +42,25 @@
     - Follow SOLID principles
         - Dependency inversion principle has been used for designing failsafe provider in this solution.
         - The most of modules are assembled in server main file by dependency injection technique.
-    - Follow TDD process and the important modules have reached 100% coverage
+    - Follow TDD process and the important modules have reached 90% to 100% coverage
     - Write "Clean Code" 
 
 * Due to size and purpose of this project, compare with normal project I have skipped or ignored below:
-    - CI/CD could be used for improving and simplifying development process. Simple make file has been used for manual testing and build.
+    - My integration tests results are not verified automatically.
     - Docker container could be used for scaling out or dev/test for micro services.
     - Web service frameworks could be used for simplifying and standardize micro service implementation.
+    - I also skipped unit tests for some module.
     - Access keys should not be keeping in source code repository.
 
+## Build and test in Linux
+
+In command line
+```
+make
+```
+or 
+```
+make utest
+make itest
+```
+or check github actions tab in this project
