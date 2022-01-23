@@ -11,7 +11,7 @@ build:
 
 # integration test
 # From log message, we should see hitting external provider only twice
-itest: build
+itest-in-ci: build
 	echo
 	./weather-server & 
 	echo
@@ -23,6 +23,8 @@ itest: build
 	curl -s http://localhost:8080/v1/weather?location=melbourne # error
 	curl -s http://localhost:8080/v1/weather?city=sydney # error
 	curl -s http://localhost:8080/v1/notExistAPI # error
+
+itest: itest-in-ci
 	pkill -c -f ./weather-server || true # shutdown server # pkill failed in github actions
 
 # coverage report
